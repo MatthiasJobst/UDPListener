@@ -1,21 +1,12 @@
-/*
-** listener.c -- a datagram sockets "server" demo
-*/
+//
+//  UDPReceiver.cpp
+//  HomeDashboard
+//
+//  Created by Matthias Jobst on 07.12.21.
+//  Copyright © 2021 Matthias Jobst. All rights reserved.
+//
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-
-#define MYPORT "7979"    // the port users will be connecting to
-
-#define MAXBUFLEN 9
+#include "UDPReceiver.h"
 
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa)
@@ -27,25 +18,17 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-int main(void)
-{
-    int sockfd;
-    struct addrinfo hints, *servinfo, *p;
-    int rv;
-    long numbytes;
-    struct sockaddr_storage their_addr;
-    unsigned char buf[MAXBUFLEN];
-    socklen_t addr_len;
-    char s[INET6_ADDRSTRLEN];
-
+UDPReceiver::UDPReceiver() {
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET; // set to AF_INET to use IPv4
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_flags = AI_PASSIVE; // use my IP
+}
 
-    if ((rv = getaddrinfo(NULL, MYPORT, &hints, &servinfo)) != 0) {
+bool UDPReceiver::createSocketForPort(const char *portUDP) {
+    if ((rv = getaddrinfo(NULL, portUDP, &hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 1;
+        return 0;
     }
 
     // loop through all the results and bind to the first we can
@@ -67,33 +50,31 @@ int main(void)
 
     if (p == NULL) {
         fprintf(stderr, "listener: failed to bind socket\n");
-        return 2;
+        return 0;
     }
 
     freeaddrinfo(servinfo);
 
-    printf("listener: waiting to recvfrom...\n");
+    return 1;
+}
 
+const char *UDPReceiver::receivePacket(const char **packetAddr){
     addr_len = sizeof their_addr;
-    if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0,
-        (struct sockaddr *)&their_addr, &addr_len)) == -1) {
+    if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) {
         perror("recvfrom");
         exit(1);
     }
-
-    printf("listener: got packet from %s\n",
-        inet_ntop(their_addr.ss_family,
-            get_in_addr((struct sockaddr *)&their_addr),
-            s, sizeof s));
-    printf("listener: packet is %ld bytes long\n", numbytes);
-    buf[numbytes] = '\0';
-    printf("listener: packet contains \"");
+    
+    *packetAddr = inet_ntop(their_addr.ss_family,
+    get_in_addr((struct sockaddr *)&their_addr),
+                         s, sizeof s);
+    printf("Address: %s\t", *packetAddr);
+    buf[MAXBUFLEN - 1] = '\0';
+    printf("MAC: \"");
     for (int i = 0; i < 6; i++)
         printf("%02hhx", buf[i]);
     unsigned int type = buf[6];
-    printf("\"\nType: %i\n", type);
-
-    close(sockfd);
-
-    return 0;
+    printf("\"\tType: %i\n", type);
+    
+    return buf;
 }
