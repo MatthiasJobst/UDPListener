@@ -6,7 +6,7 @@
 //  Copyright © 2021 Matthias Jobst. All rights reserved.
 //
 
-#include "UDPReceiver.h"
+#include "UDPReceiver.hpp"
 
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa)
