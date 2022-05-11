@@ -1,6 +1,8 @@
+UDPReceiver/UDPReceiverTest
 
-# Created by https://www.toptal.com/developers/gitignore/api/c,cmake,c++
-# Edit at https://www.toptal.com/developers/gitignore?templates=c,cmake,c++
+
+# Created by https://www.toptal.com/developers/gitignore/api/c,cmake,c++,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=c,cmake,c++,visualstudiocode
 
 ### C ###
 # Prerequisites
@@ -92,8 +94,6 @@ _deps
 # External projects
 *-prefix/
 
-# End of https://www.toptal.com/developers/gitignore/api/c,cmake,c++
-
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -119,4 +119,4 @@ _deps
 # Ignore code-workspaces
 *.code-workspace
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
+# End of https://www.toptal.com/developers/gitignore/api/c,cmake,c++,visualstudiocode
