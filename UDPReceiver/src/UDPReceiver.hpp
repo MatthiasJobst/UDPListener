@@ -24,13 +24,13 @@
 
 class UDPReceiver {
 public:
-    UDPReceiver();
+    UDPReceiver(addrinfo *hints);
     bool createSocketForPort(const char *);
     const char *receivePacket(const char **);
 
 private:
     int sockfd;
-    struct addrinfo hints, *servinfo, *p;
+    struct addrinfo *hints, *servinfo, *p;
     int rv;
     long numbytes;
     struct sockaddr_storage their_addr;

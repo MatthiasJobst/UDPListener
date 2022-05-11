@@ -18,15 +18,16 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
-UDPReceiver::UDPReceiver() {
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_INET; // set to AF_INET to use IPv4
-    hints.ai_socktype = SOCK_DGRAM;
-    hints.ai_flags = AI_PASSIVE; // use my IP
+UDPReceiver::UDPReceiver(addrinfo *addrHints) {
+    hints = addrHints;
+    memset(hints, 0, sizeof(addrinfo));
+    hints->ai_family = AF_INET; // set to AF_INET to use IPv4
+    hints->ai_socktype = SOCK_DGRAM;
+    hints->ai_flags = AI_PASSIVE; // use my IP
 }
 
 bool UDPReceiver::createSocketForPort(const char *portUDP) {
-    if ((rv = getaddrinfo(NULL, portUDP, &hints, &servinfo)) != 0) {
+    if ((rv = getaddrinfo(NULL, portUDP, hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
         return 0;
     }
