@@ -3,7 +3,7 @@
 #include <netdb.h>
 
 UDPReceiver *receiver;
-struct addrinfo hints;
+struct addrinfo hints = addrinfo();
 
 TEST_GROUP(BasicsTestGroup)
 {
@@ -34,6 +34,6 @@ TEST(BasicsTestGroup, CreateSocketForPortTest)
 
 TEST(BasicsTestGroup, CreateSocketForPortTestFail)
 {
-   const char *port = "bullshit";
+   const char *port = "*";
    CHECK(!receiver->createSocketForPort(port));
 }
