@@ -1,20 +1,23 @@
 #include "CppUTest/TestHarness.h"
 #include "src/UDPReceiver.hpp"
-#include <netdb.h>
+#include "NetworkSpy.h"
 
 UDPReceiver *receiver;
 struct addrinfo hints = addrinfo();
+struct addrinfo *spy_ai;
 
 TEST_GROUP(BasicsTestGroup)
 {
    void setup()
    {
       receiver = new UDPReceiver(&hints);
+      NetworkSpy_Create(&spy_ai);
    }
 
    void teardown()
    {
       delete receiver;
+      NetworkSpy_Destroy();
    }
 };
 
