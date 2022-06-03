@@ -12,6 +12,9 @@ extern "C" {
 void NetworkSpy_Create(struct addrinfo **);
 void NetworkSpy_Destroy(void);
 
+void NetworkSpy_Set_Pass(void);
+void NetworkSpy_Set_Fail(int error);
+
 #ifdef __cplusplus
 }
 #endif

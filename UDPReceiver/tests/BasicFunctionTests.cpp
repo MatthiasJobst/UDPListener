@@ -32,11 +32,13 @@ TEST(BasicsTestGroup, InitTest)
 TEST(BasicsTestGroup, CreateSocketForPortTest)
 {
    const char *port = "1224";
+   NetworkSpy_Set_Pass();
    CHECK(receiver->createSocketForPort(port));
 }
 
 TEST(BasicsTestGroup, CreateSocketForPortTestFail)
 {
    const char *port = "*";
+   NetworkSpy_Set_Fail(NO_RECOVERY);
    CHECK(!receiver->createSocketForPort(port));
 }

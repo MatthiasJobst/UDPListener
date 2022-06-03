@@ -1,10 +1,14 @@
 #include "CppUTest/TestHarness.h"
 #include "NetworkSpy.h"
 
-struct addrinfo *test_ai;
-
 TEST_GROUP(NetworkSpyTestGroup)
 {
+    struct addrinfo *test_ai;
+    const char *hostname = "127.0.0.1";
+    const char *servname = "localhost";
+    struct addrinfo hints;
+    struct addrinfo *res = NULL;
+
     void setup()
     {
         NetworkSpy_Create(&test_ai);
@@ -18,21 +22,23 @@ TEST_GROUP(NetworkSpyTestGroup)
 
 TEST(NetworkSpyTestGroup, InitTest)
 {
-    const char *hostname = "127.0.0.1";
-    const char *servname = "localhost";
-    struct addrinfo hints;
-    struct addrinfo *res;
+    NetworkSpy_Set_Pass();
     LONGS_EQUAL(0, getaddrinfo(hostname, servname, &hints, &res));
     freeaddrinfo(res);
 }
 
 TEST(NetworkSpyTestGroup, AdressTest)
 {
-    const char *hostname = "127.0.0.1";
-    const char *servname = "localhost";
-    struct addrinfo hints;
-    struct addrinfo *res = NULL;
+    NetworkSpy_Set_Pass();
     LONGS_EQUAL(0, getaddrinfo(hostname, servname, &hints, &res));
+    CHECK_COMPARE(res, ==, test_ai);
+    freeaddrinfo(res);
+}
+
+TEST(NetworkSpyTestGroup, FailTest)
+{
+    NetworkSpy_Set_Fail(NO_RECOVERY);
+    LONGS_EQUAL(NO_RECOVERY, getaddrinfo(hostname, servname, &hints, &res));
     CHECK_COMPARE(res, ==, test_ai);
     freeaddrinfo(res);
 }
