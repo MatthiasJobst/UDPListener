@@ -18,7 +18,9 @@ set_property(TARGET CppUTestExt PROPERTY IMPORTED_LOCATION "/usr/local/opt/cpput
 
 add_library(UDPReceiver STATIC
     ${PROJECT_SOURCE_DIR}/src/UDPReceiver.cpp
-    ${PROJECT_SOURCE_DIR}/src/UDPReceiver.hpp)
+    ${PROJECT_SOURCE_DIR}/src/UDPReceiver.hpp
+    ${PROJECT_SOURCE_DIR}/src/UDPReceiverError.cpp
+    ${PROJECT_SOURCE_DIR}/src/UDPReceiverError.hpp)
 add_library(NetworkSpy OBJECT
     ${PROJECT_SOURCE_DIR}/tests/NetworkSpy.c 
     ${PROJECT_SOURCE_DIR}/tests/NetworkSpy.h)

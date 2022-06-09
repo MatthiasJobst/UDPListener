@@ -37,5 +37,7 @@ private:
     char buf[MAXBUFLEN];
     socklen_t addr_len;
     char s[INET6_ADDRSTRLEN];
+
+    void *get_in_addr(struct sockaddr *);
 };
 #endif /* UDPReceiver_hpp */

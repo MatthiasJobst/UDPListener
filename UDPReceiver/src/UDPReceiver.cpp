@@ -7,16 +7,9 @@
 //
 
 #include "UDPReceiver.hpp"
+#include "UDPReceiverError.hpp"
 
-// get sockaddr, IPv4 or IPv6:
-void *get_in_addr(struct sockaddr *sa)
-{
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
-}
+UDPReceiverError error_handler;
 
 UDPReceiver::UDPReceiver(addrinfo *addrHints) {
     hints = addrHints;
@@ -28,7 +21,7 @@ UDPReceiver::UDPReceiver(addrinfo *addrHints) {
 
 bool UDPReceiver::createSocketForPort(const char *portUDP) {
     if ((rv = getaddrinfo(NULL, portUDP, hints, &servinfo)) != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        error_handler.addError("getaddrinfo", gai_strerror(rv));
         return false;
     }
 
@@ -79,4 +72,14 @@ const char *UDPReceiver::receivePacket(const char **packetAddr){
     printf("\"\tType: %i\n", type);
     
     return buf;
+}
+
+// get sockaddr, IPv4 or IPv6:
+void *UDPReceiver::get_in_addr(struct sockaddr *sa)
+{
+    if (sa->sa_family == AF_INET) {
+        return &(((struct sockaddr_in*)sa)->sin_addr);
+    }
+
+    return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
