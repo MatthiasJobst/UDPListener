@@ -29,7 +29,7 @@ UDPReceiver::UDPReceiver(addrinfo *addrHints) {
 bool UDPReceiver::createSocketForPort(const char *portUDP) {
     if ((rv = getaddrinfo(NULL, portUDP, hints, &servinfo)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 0;
+        return false;
     }
 
     // loop through all the results and bind to the first we can

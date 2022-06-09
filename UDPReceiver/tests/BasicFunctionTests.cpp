@@ -34,6 +34,7 @@ TEST(BasicsTestGroup, CreateSocketForPortTest)
    const char *port = "1224";
    NetworkSpy_Set_Pass();
    CHECK(receiver->createSocketForPort(port));
+   LONGS_EQUAL(0, NetworkSpy_get_error());
 }
 
 TEST(BasicsTestGroup, CreateSocketForPortTestFail)
@@ -41,4 +42,5 @@ TEST(BasicsTestGroup, CreateSocketForPortTestFail)
    const char *port = "*";
    NetworkSpy_Set_Fail(NO_RECOVERY);
    CHECK(!receiver->createSocketForPort(port));
+   LONGS_EQUAL(NO_RECOVERY, NetworkSpy_get_error());
 }
