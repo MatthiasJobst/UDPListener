@@ -4,10 +4,13 @@
 
 struct addrinfo **address;
 int fail = 0;
+int error_no = NETDB_SUCCESS;
 
 void NetworkSpy_Create(struct addrinfo **net_ai)
 {
     address = net_ai;
+    fail = NETDB_SUCCESS;
+    error_no = NETDB_SUCCESS;
 }
 
 void NetworkSpy_Destroy(void)
@@ -25,6 +28,11 @@ void NetworkSpy_Set_Fail(int error)
     fail = error;
 }
 
+int NetworkSpy_get_error()
+{
+    return error_no;
+}
+
 int getaddrinfo(const char *hostname, const char *servname, const struct addrinfo *hints, struct addrinfo **res)
 {
     res = address;
@@ -34,4 +42,10 @@ int getaddrinfo(const char *hostname, const char *servname, const struct addrinf
 
 void freeaddrinfo(struct addrinfo *ai)
 {
+}
+
+const char *gai_strerror(int error)
+{
+    error_no = error;
+    return "Test";
 }

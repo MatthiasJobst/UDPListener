@@ -42,3 +42,9 @@ TEST(NetworkSpyTestGroup, FailTest)
     CHECK_COMPARE(res, ==, test_ai);
     freeaddrinfo(res);
 }
+
+TEST(NetworkSpyTestGroup, Gai_strerrorTest)
+{
+    STRCMP_EQUAL("Test", gai_strerror(EAI_SYSTEM));
+    LONGS_EQUAL(EAI_SYSTEM, NetworkSpy_get_error());
+}
