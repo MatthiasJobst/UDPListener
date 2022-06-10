@@ -1,5 +1,8 @@
 #include "CppUTest/TestHarness.h"
-#include "NetworkSpy.h"
+extern "C"
+{
+    #include "NetworkSpy.h"
+}
 
 TEST_GROUP(NetworkSpyTestGroup)
 {

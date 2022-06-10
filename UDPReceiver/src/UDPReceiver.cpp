@@ -11,7 +11,10 @@
 
 UDPReceiverError error_handler;
 
+struct addrinfo *p;
+
 UDPReceiver::UDPReceiver(addrinfo *addrHints) {
+    p = NULL;
     hints = addrHints;
     memset(hints, 0, sizeof(addrinfo));
     hints->ai_family = AF_INET; // set to AF_INET to use IPv4
@@ -26,27 +29,27 @@ bool UDPReceiver::createSocketForPort(const char *portUDP) {
     }
 
     // loop through all the results and bind to the first we can
-    // for(p = servinfo; p != NULL; p = p->ai_next) {
-    //     if ((sockfd = socket(p->ai_family, p->ai_socktype,
-    //             p->ai_protocol)) == -1) {
-    //         perror("listener: socket");
-    //         continue;
-    //     }
+    for(p = servinfo; p != NULL; p = p->ai_next) {
+        if ((sockfd = socket(p->ai_family, p->ai_socktype,
+                p->ai_protocol)) == -1) {
+            perror("listener: socket");
+            continue;
+        }
 
-    //     if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-    //         close(sockfd);
-    //         perror("listener: bind");
-    //         continue;
-    //     }
+        if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+            close(sockfd);
+            perror("listener: bind");
+            continue;
+        }
 
-    //     break;
-    // }
+        break;
+    }
 
-    // if (p == NULL) {
-    //     fprintf(stderr, "listener: failed to bind socket\n");
-    //     freeaddrinfo(servinfo);
-    //     return 0;
-    // }
+    if (p == NULL) {
+        error_handler.addError("listener", "failed to bind socket");
+        freeaddrinfo(servinfo);
+        return 0;
+    }
 
     freeaddrinfo(servinfo);
 

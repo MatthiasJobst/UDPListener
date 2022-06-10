@@ -30,7 +30,7 @@ public:
 
 private:
     int sockfd;
-    struct addrinfo *hints, *servinfo, *p;
+    struct addrinfo *hints, *servinfo;
     int rv;
     long numbytes;
     struct sockaddr_storage their_addr;

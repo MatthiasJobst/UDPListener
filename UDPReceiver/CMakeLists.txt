@@ -24,14 +24,19 @@ add_library(UDPReceiver STATIC
 add_library(NetworkSpy OBJECT
     ${PROJECT_SOURCE_DIR}/tests/NetworkSpy.c 
     ${PROJECT_SOURCE_DIR}/tests/NetworkSpy.h)
+add_library(SocketSpy OBJECT
+    ${PROJECT_SOURCE_DIR}/tests/SocketSpy.c 
+    ${PROJECT_SOURCE_DIR}/tests/SocketSpy.h)
 
 add_executable(UDPReceiverTest
     ${PROJECT_SOURCE_DIR}/tests/AllTests.cpp
     ${PROJECT_SOURCE_DIR}/tests/BasicFunctionTests.cpp
-    ${PROJECT_SOURCE_DIR}/tests/NetworkSpyTests.cpp)
+    ${PROJECT_SOURCE_DIR}/tests/NetworkSpyTests.cpp
+    ${PROJECT_SOURCE_DIR}/tests/SocketSpyTests.cpp)
 
 target_link_libraries(UDPReceiverTest
     UDPReceiver
     $<TARGET_OBJECTS:NetworkSpy>
+    $<TARGET_OBJECTS:SocketSpy>
     CppUTest
     CppUTestExt)    

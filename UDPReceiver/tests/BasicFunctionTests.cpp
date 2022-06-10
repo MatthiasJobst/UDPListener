@@ -1,16 +1,24 @@
 #include "CppUTest/TestHarness.h"
 #include "src/UDPReceiver.hpp"
-#include "NetworkSpy.h"
-
-UDPReceiver *receiver;
-struct addrinfo hints = addrinfo();
-struct addrinfo *spy_ai;
+extern "C"
+{
+   #include "NetworkSpy.h"
+   #include "SocketSpy.h"
+}
 
 TEST_GROUP(BasicsTestGroup)
 {
+   UDPReceiver *receiver;
+   struct addrinfo hints = addrinfo();
+   struct addrinfo storage;
+   struct addrinfo *spy_ai = &storage;
+   struct sockaddr ai_addr;
+
    void setup()
    {
       receiver = new UDPReceiver(&hints);
+      spy_ai->ai_addr = &ai_addr;
+      spy_ai->ai_next = NULL;
       NetworkSpy_Create(&spy_ai);
    }
 

@@ -5,10 +5,6 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void NetworkSpy_Create(struct addrinfo **);
 void NetworkSpy_Destroy(void);
 
@@ -16,7 +12,4 @@ void NetworkSpy_Set_Pass(void);
 void NetworkSpy_Set_Fail(int error);
 int NetworkSpy_get_error(void);
 
-#ifdef __cplusplus
-}
-#endif
 #endif
