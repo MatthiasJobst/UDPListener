@@ -10,12 +10,12 @@ TEST_GROUP(SocketSpyTestGroup)
 
     void setup()
     {
-
+        SocketSpy_Create();
     }
 
     void teardown()
     {
-
+        SocketSpy_Destroy();
     }
 };
 

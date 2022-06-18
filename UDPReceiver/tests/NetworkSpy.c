@@ -35,13 +35,14 @@ int NetworkSpy_get_error()
 
 int getaddrinfo(const char *hostname, const char *servname, const struct addrinfo *hints, struct addrinfo **res)
 {
-    res = address;
+    *res = *address;
 
     return fail;
 }
 
 void freeaddrinfo(struct addrinfo *ai)
 {
+    address = NULL;
 }
 
 const char *gai_strerror(int error)

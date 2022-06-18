@@ -23,6 +23,8 @@ UDPReceiver::UDPReceiver(addrinfo *addrHints) {
 }
 
 bool UDPReceiver::createSocketForPort(const char *portUDP) {
+    int rv = 0;
+    bool result = true;
     if ((rv = getaddrinfo(NULL, portUDP, hints, &servinfo)) != 0) {
         error_handler.addError("getaddrinfo", gai_strerror(rv));
         return false;
@@ -47,13 +49,12 @@ bool UDPReceiver::createSocketForPort(const char *portUDP) {
 
     if (p == NULL) {
         error_handler.addError("listener", "failed to bind socket");
-        freeaddrinfo(servinfo);
-        return 0;
+        result = false;
     }
 
     freeaddrinfo(servinfo);
 
-    return 1;
+    return result;
 }
 
 const char *UDPReceiver::receivePacket(const char **packetAddr){
