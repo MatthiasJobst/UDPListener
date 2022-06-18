@@ -24,3 +24,24 @@ TEST(SocketSpyTestGroup, BasicTest)
     LONGS_EQUAL(0, socket(0,0,0));
     LONGS_EQUAL(0, bind(0, &sock, socklen));
 }
+
+TEST(SocketSpyTestGroup, No_Fail_Test)
+{
+    SocketSpy_Set_FAIL(NO_FAIL);
+    LONGS_EQUAL(0, socket(0,0,0));
+    LONGS_EQUAL(0, bind(0, &sock, socklen));
+}
+
+TEST(SocketSpyTestGroup, Socket_Fail_Test)
+{
+    SocketSpy_Set_FAIL(FAIL_SOCKET);
+    LONGS_EQUAL(-1, socket(0,0,0));
+    LONGS_EQUAL(0, bind(0, &sock, socklen));
+}
+
+TEST(SocketSpyTestGroup, Bind_Fail_Test)
+{
+    SocketSpy_Set_FAIL(FAIL_BIND);
+    LONGS_EQUAL(0, socket(0,0,0));
+    LONGS_EQUAL(-1, bind(0, &sock, socklen));
+}
