@@ -45,3 +45,8 @@ TEST(SocketSpyTestGroup, Bind_Fail_Test)
     LONGS_EQUAL(0, socket(0,0,0));
     LONGS_EQUAL(-1, bind(0, &sock, socklen));
 }
+
+TEST(SocketSpyTestGroup, CloseTest)
+{
+    LONGS_EQUAL(0, close(1));
+}

@@ -9,7 +9,7 @@
 #ifndef UDPReceiver_hpp
 #define UDPReceiver_hpp
 
-#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>

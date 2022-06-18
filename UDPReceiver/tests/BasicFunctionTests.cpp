@@ -73,3 +73,23 @@ TEST(BasicsTestGroup, CreateSocketForPortTestFail)
    CHECK(!receiver->createSocketForPort(port));
    LONGS_EQUAL(NO_RECOVERY, NetworkSpy_get_error());
 }
+
+TEST(BasicsTestGroup, CreateSocketForPortSocketFailTest)
+{
+   const char *port = "1224";
+   NetworkSpy_Set_Pass();
+   receiver = new UDPReceiver(&hints);
+   SocketSpy_Set_FAIL(FAIL_SOCKET);
+   CHECK(!receiver->createSocketForPort(port));
+   LONGS_EQUAL(0, NetworkSpy_get_error());
+}
+
+TEST(BasicsTestGroup, CreateSocketForPortBindFailTest)
+{
+   const char *port = "1224";
+   NetworkSpy_Set_Pass();
+   receiver = new UDPReceiver(&hints);
+   SocketSpy_Set_FAIL(FAIL_BIND);
+   CHECK(!receiver->createSocketForPort(port));
+   LONGS_EQUAL(0, NetworkSpy_get_error());
+}

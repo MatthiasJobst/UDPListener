@@ -2,6 +2,7 @@
 #define SOCKETSPY_C
 
 #include <sys/socket.h>
+#include <unistd.h>
 
 typedef enum {
     NO_FAIL = 0,
@@ -13,8 +14,5 @@ void SocketSpy_Create(void);
 void SocketSpy_Destroy(void);
 
 void SocketSpy_Set_FAIL(FailConditions_t);
-
-int socket(int, int, int);
-int bind(int, const struct sockaddr *, socklen_t);
 
 #endif

@@ -34,13 +34,13 @@ bool UDPReceiver::createSocketForPort(const char *portUDP) {
     for(p = servinfo; p != NULL; p = p->ai_next) {
         if ((sockfd = socket(p->ai_family, p->ai_socktype,
                 p->ai_protocol)) == -1) {
-            perror("listener: socket");
+            error_handler.addError("socket", strerror(errno));
             continue;
         }
 
         if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
             close(sockfd);
-            perror("listener: bind");
+            error_handler.addError("bind", strerror(errno));
             continue;
         }
 
@@ -48,7 +48,7 @@ bool UDPReceiver::createSocketForPort(const char *portUDP) {
     }
 
     if (p == NULL) {
-        error_handler.addError("listener", "failed to bind socket");
+        error_handler.addError("loop", "failed to bind socket");
         result = false;
     }
 
