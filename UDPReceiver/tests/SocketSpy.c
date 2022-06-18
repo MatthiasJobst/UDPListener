@@ -37,3 +37,9 @@ int close(int socket)
 {
     return 0;
 }
+
+ssize_t recvfrom(int socket, void *restrict buffer, size_t length, int flags, struct sockaddr *restrict address,
+         socklen_t *restrict address_len)
+{
+    return 0;
+}

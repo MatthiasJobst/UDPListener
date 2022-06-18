@@ -20,16 +20,20 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
+#include "UDPReceiverError.hpp"
+
 #define MAXBUFLEN 9
 
 class UDPReceiver {
 public:
     UDPReceiver(addrinfo *hints);
+    ~UDPReceiver();
     bool createSocketForPort(const char *);
     const char *receivePacket(const char **);
 
 private:
     int sockfd;
+    UDPReceiverError *error_handler;
     struct addrinfo *hints, *servinfo;
     long numbytes;
     struct sockaddr_storage their_addr;

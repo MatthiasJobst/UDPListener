@@ -50,3 +50,8 @@ TEST(SocketSpyTestGroup, CloseTest)
 {
     LONGS_EQUAL(0, close(1));
 }
+
+TEST(SocketSpyTestGroup, RecvfromZeroTest)
+{
+    LONGS_EQUAL(0, recvfrom(0, NULL, 0, 0, NULL, 0));
+}

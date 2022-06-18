@@ -7,26 +7,29 @@
 //
 
 #include "UDPReceiver.hpp"
-#include "UDPReceiverError.hpp"
-
-UDPReceiverError error_handler;
-
-struct addrinfo *p;
 
 UDPReceiver::UDPReceiver(addrinfo *addrHints) {
-    p = NULL;
     hints = addrHints;
     memset(hints, 0, sizeof(addrinfo));
     hints->ai_family = AF_INET; // set to AF_INET to use IPv4
     hints->ai_socktype = SOCK_DGRAM;
     hints->ai_flags = AI_PASSIVE; // use my IP
+
+    error_handler = new UDPReceiverError();
+}
+
+UDPReceiver::~UDPReceiver()
+{
+    delete error_handler;
 }
 
 bool UDPReceiver::createSocketForPort(const char *portUDP) {
     int rv = 0;
     bool result = true;
+    struct addrinfo *p = NULL;
+
     if ((rv = getaddrinfo(NULL, portUDP, hints, &servinfo)) != 0) {
-        error_handler.addError("getaddrinfo", gai_strerror(rv));
+        error_handler->addError("getaddrinfo", gai_strerror(rv));
         return false;
     }
 
@@ -34,13 +37,13 @@ bool UDPReceiver::createSocketForPort(const char *portUDP) {
     for(p = servinfo; p != NULL; p = p->ai_next) {
         if ((sockfd = socket(p->ai_family, p->ai_socktype,
                 p->ai_protocol)) == -1) {
-            error_handler.addError("socket", strerror(errno));
+            error_handler->addError("socket", strerror(errno));
             continue;
         }
 
         if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
             close(sockfd);
-            error_handler.addError("bind", strerror(errno));
+            error_handler->addError("bind", strerror(errno));
             continue;
         }
 
@@ -48,7 +51,7 @@ bool UDPReceiver::createSocketForPort(const char *portUDP) {
     }
 
     if (p == NULL) {
-        error_handler.addError("loop", "failed to bind socket");
+        error_handler->addError("loop", "failed to bind socket");
         result = false;
     }
 
@@ -60,13 +63,11 @@ bool UDPReceiver::createSocketForPort(const char *portUDP) {
 const char *UDPReceiver::receivePacket(const char **packetAddr){
     addr_len = sizeof their_addr;
     if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) {
-        perror("recvfrom");
+        error_handler->addError("recvfrom", strerror(errno));
         exit(1);
     }
     
-    *packetAddr = inet_ntop(their_addr.ss_family,
-    get_in_addr((struct sockaddr *)&their_addr),
-                         s, sizeof s);
+    *packetAddr = inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s);
     printf("Address: %s\t", *packetAddr);
     buf[MAXBUFLEN - 1] = '\0';
     printf("MAC: \"");
