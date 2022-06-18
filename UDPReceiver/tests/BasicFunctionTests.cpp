@@ -1,5 +1,8 @@
 #include "CppUTest/TestHarness.h"
 #include "src/UDPReceiver.hpp"
+#include "src/UDPReceiverError.hpp"
+#include "ErrorHandlerSpy.hpp"
+
 extern "C"
 {
    #include "NetworkSpy.h"
@@ -21,6 +24,7 @@ void set_addrinfo_null(struct addrinfo *address)
 TEST_GROUP(BasicsTestGroup)
 {
    UDPReceiver *receiver;
+   ErrorHandlerSpy *error_handler;
    struct addrinfo hints;
    struct addrinfo storage;
    struct addrinfo *spy_ai;
@@ -36,11 +40,16 @@ TEST_GROUP(BasicsTestGroup)
       spy_ai->ai_next = NULL;
       NetworkSpy_Create(&spy_ai);
       SocketSpy_Create();
+
+      receiver = new UDPReceiver(&hints);
+      error_handler = new ErrorHandlerSpy();
+      receiver->set_error_handler(error_handler);
    }
 
    void teardown()
    {
       delete receiver;
+      delete error_handler;
       NetworkSpy_Destroy();
       SocketSpy_Destroy();
    }
@@ -48,8 +57,6 @@ TEST_GROUP(BasicsTestGroup)
 
 TEST(BasicsTestGroup, InitTest)
 {
-   receiver = new UDPReceiver(&hints);
-
    LONGS_EQUAL(hints.ai_flags, AI_PASSIVE);
    LONGS_EQUAL(hints.ai_family, AF_INET);
    LONGS_EQUAL(hints.ai_socktype, SOCK_DGRAM);
@@ -60,16 +67,15 @@ TEST(BasicsTestGroup, CreateSocketForPortTest)
 {
    const char *port = "1224";
    NetworkSpy_Set_Pass();
-   receiver = new UDPReceiver(&hints);
    CHECK(receiver->createSocketForPort(port));
    LONGS_EQUAL(0, NetworkSpy_get_error());
+   STRCMP_EQUAL("", error_handler->get_area());
 }
 
 TEST(BasicsTestGroup, CreateSocketForPortTestFail)
 {
    const char *port = "*";
    NetworkSpy_Set_Fail(NO_RECOVERY);
-   receiver = new UDPReceiver(&hints);
    CHECK(!receiver->createSocketForPort(port));
    LONGS_EQUAL(NO_RECOVERY, NetworkSpy_get_error());
 }
@@ -78,7 +84,6 @@ TEST(BasicsTestGroup, CreateSocketForPortSocketFailTest)
 {
    const char *port = "1224";
    NetworkSpy_Set_Pass();
-   receiver = new UDPReceiver(&hints);
    SocketSpy_Set_FAIL(FAIL_SOCKET);
    CHECK(!receiver->createSocketForPort(port));
    LONGS_EQUAL(0, NetworkSpy_get_error());
@@ -88,7 +93,6 @@ TEST(BasicsTestGroup, CreateSocketForPortBindFailTest)
 {
    const char *port = "1224";
    NetworkSpy_Set_Pass();
-   receiver = new UDPReceiver(&hints);
    SocketSpy_Set_FAIL(FAIL_BIND);
    CHECK(!receiver->createSocketForPort(port));
    LONGS_EQUAL(0, NetworkSpy_get_error());

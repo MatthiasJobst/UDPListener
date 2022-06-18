@@ -15,12 +15,12 @@ UDPReceiver::UDPReceiver(addrinfo *addrHints) {
     hints->ai_socktype = SOCK_DGRAM;
     hints->ai_flags = AI_PASSIVE; // use my IP
 
-    error_handler = new UDPReceiverError();
+    error_handler = NULL;
 }
 
-UDPReceiver::~UDPReceiver()
+void UDPReceiver::set_error_handler(ErrorHandler *handler)
 {
-    delete error_handler;
+    error_handler = handler;
 }
 
 bool UDPReceiver::createSocketForPort(const char *portUDP) {

@@ -1,7 +1,9 @@
 #ifndef UDPReceiverError_hpp
 #define UDPReceiverError_hpp
 
-class UDPReceiverError
+#include "ErrorHandler.hpp"
+
+class UDPReceiverError: public ErrorHandler
 {
 public:
     void addError(char const*, char const*);
