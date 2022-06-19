@@ -22,7 +22,12 @@ add_library(UDPReceiver STATIC
     ${PROJECT_SOURCE_DIR}/src/UDPReceiver.hpp
     ${PROJECT_SOURCE_DIR}/src/UDPReceiverError.cpp
     ${PROJECT_SOURCE_DIR}/src/UDPReceiverError.hpp
-    ${PROJECT_SOURCE_DIR}/src/ErrorHandler.hpp)
+    ${PROJECT_SOURCE_DIR}/src/ErrorHandler.hpp
+    ${PROJECT_SOURCE_DIR}/src/UDPServerInfo.hpp
+    ${PROJECT_SOURCE_DIR}/src/UDPServerInfo.cpp)
+add_library(SocketHelper OBJECT
+    ${PROJECT_SOURCE_DIR}/src/SocketHelper.c
+    ${PROJECT_SOURCE_DIR}/src/SocketHelper.h)
 add_library(NetworkSpy OBJECT
     ${PROJECT_SOURCE_DIR}/tests/NetworkSpy.c 
     ${PROJECT_SOURCE_DIR}/tests/NetworkSpy.h)
@@ -37,12 +42,14 @@ add_library(ErrorHandlerSpy OBJECT
 add_executable(UDPReceiverTest
     ${PROJECT_SOURCE_DIR}/tests/AllTests.cpp
     ${PROJECT_SOURCE_DIR}/tests/BasicFunctionTests.cpp
+    ${PROJECT_SOURCE_DIR}/tests/UDPServerInfoTests.cpp
     ${PROJECT_SOURCE_DIR}/tests/NetworkSpyTests.cpp
     ${PROJECT_SOURCE_DIR}/tests/SocketSpyTests.cpp
     ${PROJECT_SOURCE_DIR}/tests/ErrorHandlerSpyTests.cpp)
 
 target_link_libraries(UDPReceiverTest
     UDPReceiver
+    $<TARGET_OBJECTS:SocketHelper>
     $<TARGET_OBJECTS:NetworkSpy>
     $<TARGET_OBJECTS:SocketSpy>
     $<TARGET_OBJECTS:ErrorHandlerSpy>
