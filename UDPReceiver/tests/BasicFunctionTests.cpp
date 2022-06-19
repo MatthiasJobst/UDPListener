@@ -124,5 +124,6 @@ TEST(BasicsTestGroup, ReceivePacketFailTest)
    const char *input = "No___data";
    SocketSpy_Set_FAIL(FAIL_RECV);
    const char *buffer = receiver->receivePacket(&input);
-   STRCMP_EQUAL("Testdata", buffer);
+   POINTERS_EQUAL(nullptr, buffer);
+   STRCMP_EQUAL("recvfrom", error_handler->get_area());
 }

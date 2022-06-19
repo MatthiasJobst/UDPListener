@@ -64,7 +64,7 @@ const char *UDPReceiver::receivePacket(const char **packetAddr){
     addr_len = sizeof their_addr;
     if ((numbytes = recvfrom(sockfd, buf, MAXBUFLEN-1 , 0, (struct sockaddr *)&their_addr, &addr_len)) == -1) {
         error_handler->addError("recvfrom", strerror(errno));
-        exit(1);
+        return nullptr;
     }
     
     *packetAddr = inet_ntop(their_addr.ss_family, get_in_addr((struct sockaddr *)&their_addr), s, sizeof s);
