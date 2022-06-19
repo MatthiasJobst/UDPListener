@@ -1,4 +1,5 @@
 #include "SocketSpy.h"
+#include <string.h>
 
 FailConditions_t failure = NO_FAIL;
 
@@ -41,5 +42,11 @@ int close(int socket)
 ssize_t recvfrom(int socket, void *restrict buffer, size_t length, int flags, struct sockaddr *restrict address,
          socklen_t *restrict address_len)
 {
-    return 0;
+    if (failure == FAIL_RECV)
+        return -1;
+
+    char buf[9] = "Testdata\n";
+    if (buffer != NULL)
+        memcpy(buffer, &buf, 9);
+    return 9;
 }

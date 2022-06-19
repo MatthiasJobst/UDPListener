@@ -100,3 +100,29 @@ TEST(BasicsTestGroup, CreateSocketForPortBindFailTest)
    LONGS_EQUAL(0, NetworkSpy_get_error());
    STRCMP_EQUAL("loop", error_handler->get_area());
 }
+
+TEST(BasicsTestGroup, ReceivePacketTest)
+{
+   const char *port = "1224";
+   NetworkSpy_Set_Pass();
+   CHECK(receiver->createSocketForPort(port));
+   LONGS_EQUAL(0, NetworkSpy_get_error());
+   POINTERS_EQUAL(nullptr, error_handler->get_area());
+   const char *input = "No___data";
+   SocketSpy_Set_FAIL(NO_FAIL);
+   const char *buffer = receiver->receivePacket(&input);
+   STRCMP_EQUAL("Testdata", buffer);
+}
+
+TEST(BasicsTestGroup, ReceivePacketFailTest)
+{
+   const char *port = "1224";
+   NetworkSpy_Set_Pass();
+   CHECK(receiver->createSocketForPort(port));
+   LONGS_EQUAL(0, NetworkSpy_get_error());
+   POINTERS_EQUAL(nullptr, error_handler->get_area());
+   const char *input = "No___data";
+   SocketSpy_Set_FAIL(FAIL_RECV);
+   const char *buffer = receiver->receivePacket(&input);
+   STRCMP_EQUAL("Testdata", buffer);
+}
