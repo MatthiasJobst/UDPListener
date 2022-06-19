@@ -78,6 +78,7 @@ TEST(BasicsTestGroup, CreateSocketForPortTestFail)
    NetworkSpy_Set_Fail(NO_RECOVERY);
    CHECK(!receiver->createSocketForPort(port));
    LONGS_EQUAL(NO_RECOVERY, NetworkSpy_get_error());
+   STRCMP_EQUAL("getaddrinfo", error_handler->get_area());
 }
 
 TEST(BasicsTestGroup, CreateSocketForPortSocketFailTest)
@@ -87,6 +88,7 @@ TEST(BasicsTestGroup, CreateSocketForPortSocketFailTest)
    SocketSpy_Set_FAIL(FAIL_SOCKET);
    CHECK(!receiver->createSocketForPort(port));
    LONGS_EQUAL(0, NetworkSpy_get_error());
+   STRCMP_EQUAL("loop", error_handler->get_area());
 }
 
 TEST(BasicsTestGroup, CreateSocketForPortBindFailTest)
@@ -96,4 +98,5 @@ TEST(BasicsTestGroup, CreateSocketForPortBindFailTest)
    SocketSpy_Set_FAIL(FAIL_BIND);
    CHECK(!receiver->createSocketForPort(port));
    LONGS_EQUAL(0, NetworkSpy_get_error());
+   STRCMP_EQUAL("loop", error_handler->get_area());
 }
