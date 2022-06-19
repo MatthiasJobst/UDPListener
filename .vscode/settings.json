@@ -1,4 +1,8 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
-    "cmake.sourceDirectory": "${workspaceFolder}/UDPReceiver"
+    "cmake.sourceDirectory": "${workspaceFolder}/UDPReceiver",
+    "files.associations": {
+        "netdb.h": "c",
+        "socket.h": "c"
+    }
 }
