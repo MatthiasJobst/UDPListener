@@ -18,6 +18,12 @@ TEST_GROUP(ErrorHandlerSpyTestGroup)
 
 TEST(ErrorHandlerSpyTestGroup, InitTest)
 {
+    POINTERS_EQUAL(nullptr, error_handler->get_area());
+    POINTERS_EQUAL(nullptr, error_handler->get_error());
+}
+
+TEST(ErrorHandlerSpyTestGroup, FunctionTest)
+{
     error_handler->addError("location", "error");
     STRCMP_EQUAL("location", error_handler->get_area());
     STRCMP_EQUAL("error", error_handler->get_error());

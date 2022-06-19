@@ -6,6 +6,7 @@
 class ErrorHandlerSpy: public ErrorHandler 
 {
 public:
+    ErrorHandlerSpy(void);
     void addError(char const*, char const*);
     const char *get_area(void);
     const char *get_error(void);

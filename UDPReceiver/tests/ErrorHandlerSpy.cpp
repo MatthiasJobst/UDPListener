@@ -3,6 +3,12 @@
 const char *area_spy = nullptr;
 const char *error_spy = nullptr;
 
+ErrorHandlerSpy::ErrorHandlerSpy()
+{
+    area_spy = nullptr;
+    error_spy = nullptr;
+}
+
 void ErrorHandlerSpy::addError(const char *source, const char *error)
 {
     area_spy = source;

@@ -69,7 +69,7 @@ TEST(BasicsTestGroup, CreateSocketForPortTest)
    NetworkSpy_Set_Pass();
    CHECK(receiver->createSocketForPort(port));
    LONGS_EQUAL(0, NetworkSpy_get_error());
-   STRCMP_EQUAL("", error_handler->get_area());
+   POINTERS_EQUAL(nullptr, error_handler->get_area());
 }
 
 TEST(BasicsTestGroup, CreateSocketForPortTestFail)
