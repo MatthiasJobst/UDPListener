@@ -20,16 +20,16 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#include "ErrorHandler.hpp"
+#include "WithErrorHandler.hpp"
 
 #define MAXBUFLEN 9
 
-class UDPReceiver {
+class UDPReceiver: public WithErrorHandler {
 public:
     UDPReceiver(addrinfo *hints);
-    void set_error_handler(ErrorHandler *);
     bool createSocketForPort(const char *);
     const char *receivePacket(const char **);
+    void set_error_handler(ErrorHandler *);
 
 private:
     int sockfd;
@@ -42,5 +42,8 @@ private:
     char s[INET6_ADDRSTRLEN];
 
     void *get_in_addr(struct sockaddr *);
+    bool validInfoGottenForPort(const char *port);
+    bool isSocketCreatedForAddrInfo(struct addrinfo *);
+    bool isSocketBound(struct addrinfo *);
 };
 #endif /* UDPReceiver_hpp */

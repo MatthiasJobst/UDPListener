@@ -23,31 +23,52 @@ void UDPReceiver::set_error_handler(ErrorHandler *handler)
     error_handler = handler;
 }
 
+bool UDPReceiver::validInfoGottenForPort(const char *port)
+{
+    int rv;
+    if ((rv = getaddrinfo(NULL, port, hints, &servinfo)) != 0) {
+        error_handler->addError("getaddrinfo", gai_strerror(rv));
+        return false;
+    }
+
+    return true;
+}
+
+bool UDPReceiver::isSocketCreatedForAddrInfo(struct addrinfo *serverAddr)
+{
+    if ((sockfd = socket(serverAddr->ai_family, serverAddr->ai_socktype,
+                serverAddr->ai_protocol)) == -1)
+        {
+            error_handler->addError("socket", strerror(errno));
+            return false;
+        }
+    return true;
+                
+}
+
+bool UDPReceiver::isSocketBound(struct addrinfo *serverAddr)
+{
+    if (bind(sockfd, serverAddr->ai_addr, serverAddr->ai_addrlen) == -1) {
+                close(sockfd);
+                error_handler->addError("bind", strerror(errno));
+                return false;
+    }
+    return true;
+}
+
 bool UDPReceiver::createSocketForPort(const char *portUDP) {
-    int rv = 0;
     bool result = true;
     struct addrinfo *p = NULL;
 
-    if ((rv = getaddrinfo(NULL, portUDP, hints, &servinfo)) != 0) {
-        error_handler->addError("getaddrinfo", gai_strerror(rv));
+    if (!validInfoGottenForPort(portUDP)) {
         return false;
     }
 
     // loop through all the results and bind to the first we can
     for(p = servinfo; p != NULL; p = p->ai_next) {
-        if ((sockfd = socket(p->ai_family, p->ai_socktype,
-                p->ai_protocol)) == -1) {
-            error_handler->addError("socket", strerror(errno));
-            continue;
-        }
-
-        if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-            close(sockfd);
-            error_handler->addError("bind", strerror(errno));
-            continue;
-        }
-
-        break;
+        if (isSocketCreatedForAddrInfo(p))
+            if (isSocketBound(p))
+                break;
     }
 
     if (p == NULL) {

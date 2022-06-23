@@ -24,7 +24,8 @@ add_library(UDPReceiver STATIC
     ${PROJECT_SOURCE_DIR}/src/UDPReceiverError.hpp
     ${PROJECT_SOURCE_DIR}/src/ErrorHandler.hpp
     ${PROJECT_SOURCE_DIR}/src/UDPServerInfo.hpp
-    ${PROJECT_SOURCE_DIR}/src/UDPServerInfo.cpp)
+    ${PROJECT_SOURCE_DIR}/src/UDPServerInfo.cpp
+    ${PROJECT_SOURCE_DIR}/src/WithErrorHandler.hpp)
 add_library(SocketHelper OBJECT
     ${PROJECT_SOURCE_DIR}/src/SocketHelper.c
     ${PROJECT_SOURCE_DIR}/src/SocketHelper.h)
